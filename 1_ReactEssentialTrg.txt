@@ -1,0 +1,23 @@
+-- Introduction --
+	- React.js
+		- Most popular JS library for building user interface
+		- front-end framework
+
+-- 1 What is React? --
+
+-- 1-1 What is React? --
+	- JS library to create user interfaces
+	- created at Facebook, open-sourced @ 2013
+	- React Native: create mobile app with React
+	
+	* reactjs.org (documentation for React)
+	
+	- Its architecture makes it:
+		- faster & easier to build web products
+		
+-- 1-2 Setting up react devtools for web --
+
+	1) search for React Developer tool <desired browser>
+	2) add extension to browser
+	3) Any webpage using react, can open inspect (Q)
+		- will have Components & Profiler tab
