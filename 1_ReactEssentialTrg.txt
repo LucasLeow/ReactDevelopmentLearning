@@ -21,3 +21,133 @@
 	2) add extension to browser
 	3) Any webpage using react, can open inspect (Q)
 		- will have Components & Profiler tab
+		
+-- 1-3 Different IDEs for development --
+	- "react.new" in browser -> codesandbox.io (VSCode in browser)
+	- codepen (build & test frontend code)
+	- glitch.com
+	
+-- 2 Intro to React Elements --
+
+-- 2-1 Adding React to Project --
+
+	CDN of React:
+		- Quick way to add React library to browser
+		- Requires internet connection
+	
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>	
+		- react dom required to add react components to webpage
+	
+	- add in <head> tag
+	
+	
+	Purpose of React:
+		- Instead of creating content with HTML + CSS, create it with React
+			i.e creating using JS
+			
+	
+	Creating "h1" content using React:
+	
+		- ReactDOM.render(element, location);
+		- React.createElement(tagName, properties, content);
+	
+		<div id = "root"> </div>
+			- Convention for adding code with react
+			- within <div> with id = "root"
+		
+		<script type = "text/javascript"> 
+			ReactDOM.render(
+			React.createElement("h1", null, "Getting Started with React"),
+			document.getElementById("root")
+			);
+		</script>
+		
+
+-- 2-2 Creating React elements technique --
+	<script type = "text/javascript">
+	
+		let header = React.createElement("h1", null, "Getting Started with React");
+		ReactDOM.render(header, document.getElementById("root"));
+		
+	</script>
+	
+-- 2-3 Creating child within parent element using JSX --
+
+	JSX: Javascript XML
+		- HTML-like syntax for creating UI elements
+		
+	JS Implementation:
+
+		<script type = "text/javascript">
+		
+			let ul = 
+				React.createElement("ul", {style: {color: "blue"}},
+				React.createElement("li", null, "Item 1"),
+				React.createElement("li", null, "Item 2"),
+				React.createElement("li", null, "Item 3"));
+				
+			ReactDOM.render(ul, document.getElementById("root"));
+			
+		</script>
+	
+	JSX Implementation: (Need Babel to compile, else error in Browser)
+	
+		Babel:
+		- JSX tag-based syntax not supported in Browser
+		- Takes code unsupported by browser & convert it to 1 supported by browser
+		
+		Step 1: add CDN of babel to <head>
+			- Not the typical way to add babel, typically npm install babel
+			- precompile before it even gets to the browser
+		
+		- <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+			- add the following CDN in <head> tag
+			
+			
+		Step 2: Change script to type = "text/babel"
+		
+		<script type = "text/babel">
+	
+		ReactDOM.render(
+			<ul>
+				<li> Item 1 </li>
+				<li> Item 2 </li>
+				<li> Item 3 </li>
+			</ul>,
+			document.getElementById("root")
+		);
+		
+		</script>
+
+-- 2-5 Working with JSX Syntax --
+
+	Benefits of JSX:
+		- inject dynamic content into tags by referencing to variable names
+		- by using {} JSX expression syntax
+			- variable names
+			- functions
+		
+			eg.
+
+			
+		<script type = "text/babel">
+		
+			let robot = "robot 1";
+			let cowboy = "cowboy 1";
+			let moon = "moon 1";
+	
+			ReactDOM.render(
+				<ul>
+					<li> {robot} </li>
+					<li> {cowboy} </li>
+					<li> {moon} </li>
+				</ul>,
+				document.getElementById("root")
+			);
+		
+		</script>
+			
+			
+
+		
