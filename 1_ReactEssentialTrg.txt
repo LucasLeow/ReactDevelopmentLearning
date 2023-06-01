@@ -605,3 +605,230 @@
 		- uses validation
 	
 	- usehooks.com (not forms specific, but more info for hooks)
+	
+
+
+-- 6 Async React --
+
+-- 6-1 & 6-2 Fetching & displaying data with hooks --
+	- fetching data from external API
+		- https://api.github.com/users/LucasLeow
+		
+		- useState: To handle data
+		- useEffect: To make call to external API
+		
+		
+		
+		
+						import { useState, useEffect} from "react";
+
+						function GitHubUser( { name, location, avatar }) { // essentially props
+							return (
+								<div>
+									<h1> {name} </h1>
+									<p> {location} </p>
+									<img src={avatar}/>
+								</div>
+							);
+						}
+						
+						function App() {
+							const [data, setData] = useState(null);
+							const URL = `https://api.github.com/users/LucasLeow`;
+							
+							useEffect(()=>{
+								fetch(URL)
+								.then(res=>res.json())
+								.then(data=>setData(data))
+							}, []);
+							
+							if(data) {
+								return (
+									<GitHubUser // specify props here as properties, passed to GitHubUser Component
+										name={data.name} 
+										location={data.location}
+										avatar={data.avatar_url}
+									/>
+								);
+							}
+						}
+						
+						
+	
+-- 6-3 Handling Loading States --
+
+	- when fetching data from external API, data can be in different states
+		- loading state (in process of fetching data, response not yet received)
+		- success state (data response successfully received)
+		- error state (data response not retrieved)
+	
+	- can be represented with useState Hook
+	
+	
+
+	
+	-- code --
+			
+					import { useState, useEffect} from "react";
+
+					function GitHubUser( { name, location, avatar }) {
+					  return (
+						<div>
+						  <h1> {name} </h1>
+						  <p> {location} </p>
+						  <img height={150} alt="" src={avatar}/>
+						</div>
+					  );
+					}
+
+					function App() {
+					  const [data, setData] = useState(null);
+					  const [error, setError] = useState(null);
+					  const [loading, setLoading] = useState(false);
+					  const URL = `https://api.github.com/users/LucasLeow`;
+					  
+					  useEffect(()=> {
+						setLoading(true);
+
+						fetch(URL)
+						.then(res=>res.json())
+						.then(data=>setData(data))
+						.then(() => setLoading(false))
+						.catch(setError)
+					  }, []);
+					  
+					  if (loading) { return (<h1>Loading...</h1>); } 
+
+					  if (error) { return (<pre>{JSON.stringify(error)}</pre>); }    
+
+					  if (!data) return null;
+					  
+					  return (
+						  <GitHubUser 
+							name={data.name} 
+							location={data.location}
+							avatar={data.avatar_url}
+						  />
+						);
+					  }
+		  
+		  
+		  
+		  
+		  
+		  
+-- 6-4 Fetching Data from GraphQL API --
+	- GraphQL:
+		- open-source data query & manipulation language for API
+		- Specify desired data using fields
+		
+	GraphQL Query:
+
+		query {
+			allLifts {
+				name
+				elevationGain
+				status
+			}
+		}
+		
+	eg.
+	
+			const query = `
+			query {
+				allLifts {
+					name
+					elevationGain
+					status
+				}
+			}
+			`;
+			
+			const options = {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({ query })
+			}
+	
+	
+			function Lift( { name, elevationGain, status }) {
+				return (
+					<div>
+						<h1> {name} </h1>
+						<p> {elevationGain} {status}</p>
+					</div>
+				)
+			}
+		
+		
+				function App() {
+				  const [data, setData] = useState(null);
+				  const [error, setError] = useState(null);
+				  const [loading, setLoading] = useState(false);
+				  const URL = `https://snowtooth.moonhighway.com/`;
+				  
+				  useEffect(()=> {
+					setLoading(true);
+
+					fetch(URL, options)
+					.then(res=>res.json())
+					.then(data=>setData(data))
+					.then(() => setLoading(false))
+					.catch(setError)
+				  }, []);
+				  
+				  if (loading) { return (<h1>Loading...</h1>); } 
+
+				  if (error) { return (<pre>{JSON.stringify(error)}</pre>); }    
+
+				  if (!data) return null;
+				  
+				  return (
+					<div>
+						{data.data.allLifts.map(lift=>( // data key wrapped within a data key
+						<Lift name={lift.name} elevationGain={lift.elevationGain} status={lift.status}/>
+						)
+						)}
+					</div>
+					);
+			  }
+			  
+
+
+-- 6-5 render props --
+	- using functions to display right data at the right time
+	
+	eg.
+	
+		const tahoe_peaks = [
+		  {name: "Freel", elevation: 10891},
+		  {name: "Monument", elevation: 10067},
+		  {name: "Pyramid", elevation: 9983}
+		];
+
+		// renderItem: Render individual list item
+		// renderEmpty: Display if list empty 
+		function List( { data, renderItem, renderEmpty } ) {
+		  return !data.length ? ( renderEmpty ): (
+		  <ul>
+			{data.map(item=> (
+			  <li key={item.name}> 
+				{renderItem(item)}
+			  </li>))}
+			</ul>
+			);
+		}
+
+		function App() {
+		  return (
+			<List 
+			data={tahoe_peaks}
+			renderEmpty={<p>This list is empty!</p>}
+			renderItem={(item)=> (
+			  <>
+			  {item.name}-{item.elevation} ft.
+			  </>
+			)
+			} />
+		  );
+		  }
