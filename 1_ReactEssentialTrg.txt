@@ -456,3 +456,152 @@
 		</div>
 	  )
 	}	
+	
+	
+-- 5 Handling Forms in React --
+
+-- 5-1 Uncontrolled Component Technique --
+	- using useRef Hook (Uncontrolled component)
+		- managing form components outside of state (just using current.value)
+	
+		- returns Object {current: value}
+		- typically referencing form tags
+		- can be attached to UI element and make interaction possible with JS
+			1) Initialize reference variable
+				eg. const colorTitle = useRef(); // Known as uncontrolled component
+					- can see this as a container with value contained within
+					- will not re-render, must query current value to access
+				
+			2) Attach reference to desired UI tag
+				eg. <input ref={colorTitle} type="text"/>
+				
+			3) Creating function to interact with reference variable
+				const submit = (e) => {
+					const colorInput = colorTitle.current.value; // reference return object with key // called current
+				}
+				
+			4) Reset form element back to default (optional)
+				colorTitle.current.value = "";
+	
+	eg.
+	
+	import { useRef } from "react";
+	
+	function App() {
+	
+		const colorTitle = useRef();
+		const hexColor = useRef();
+		
+		const submit = (e) => {
+			e.preventDefault(); // prevent page from refreshing
+			const colorInput = colorTitle.current.value;
+			const hexInput = hexColor.current.value;
+			alert(`Selected Color: ${colorInput} \n Selected Hex: ${hexInput}`)
+			
+			colorTitle.current.value = ""; // reset form element back to default
+			hexColor.current.value=""; 
+		};
+		
+		return (
+			<form onSubmit = {submit}>
+			
+				<input ref={colorTitle} type="text" placeholder="Color title..."/>
+				<input ref={hexColor} type="color"/>
+				<button>ADD</button>
+				
+			</form>
+		);
+	}
+
+-- 5-2 Controlled Component Technique --
+	- Managing forms using state (useState)
+	- Whenever useState used, its a controlled component
+		- controlling form by creating state values
+	
+	
+	import { useState } from "react";
+		
+	function App() {
+
+	const [title, setTitle] = useState(""); // initial state is empty
+	const [hex, setHex] = useState("#000000");
+	
+	const submit = (event) => {
+	
+	  event.preventDefault(); // prevent page from refreshing
+	  alert(`Selected Color: ${title} \n Selected Hex: ${hex}`)
+	  setTitle("");
+	  setHex("#000000");
+	  
+	};
+
+	  return (
+		<form onSubmit = {submit}>
+
+		  <input value={title} type="text" onChange={event=> setTitle(event.target.value)} placeholder="Color title..."/>
+		  <input value={hex} onChange={(event) => setHex(event.target.value)} type="color"/>
+		  <button>ADD</button>
+		  
+		</form>
+	  );
+	}
+	
+-- 5-3 Building custom Hooks --
+
+	- useState: To manage state of form fields
+	- useRef: To manipulate values from form fields
+	- useEffect: To perform side effects based on state
+	
+	
+	Custom hook:
+		- A JS function
+		- must always start with "use"
+			eg. useInput()
+		- can return anything, based on own needs
+		- destructure & access custom hook accordingly
+			
+			
+			
+	import { useState } from "react";
+
+	function useInput(initialValue) {
+	  const [value, setValue] = useState(initialValue);
+	  return [
+		{value, onChange: e => setValue(e.target.value)},
+		() => setValue(initialValue) // reset value
+	  ]
+	}
+
+	function App() {
+
+	  const [titleProp, resetTitle] = useInput(""); // initial state is empty
+	  const[hexProp, resetHex] = useInput("#000000");
+
+	const submit = (event) => {
+	  event.preventDefault(); // prevent page from refreshing
+	  alert(`Selected Color: ${titleProp.value} \n Selected Hex: ${hexProp.value}`)
+	 resetTitle();
+	  resetHex();
+
+	};
+
+	  return (
+
+		<form onSubmit = {submit}>
+		  <input {...titleProp} placeholder="Color title..."/>
+		  <input {...hexProp} type="color"/>
+		  <button>ADD</button>
+		  
+		</form>
+	  );
+	}
+	
+-- 5-5 Form Libraries --
+
+	- formik.org
+		- handle submission of form
+		
+	- react-hook-form
+		- uses validation
+	
+	- usehooks.com (not forms specific, but more info for hooks)

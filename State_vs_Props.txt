@@ -1,0 +1,52 @@
+Props:
+	- like arguments to a function
+	- props is passed into a component
+	- handled & updated outside the component where it was specified
+	
+		// Header Component
+		function Header(props) {
+			return (
+				<header>
+					<h1> {props.name}'s Header </h1>
+					<h2> {props.name}'s School is {props.school} </h2>
+				</header>
+			)
+		}
+		
+		// App Component (To consolidate multiple React components)
+		function App() { // to combine different components together
+			return (
+				<div>
+					<Header name="Lucas" school="NTU"/>
+				</div>
+			);
+		}
+		
+State:
+	- handled inside the component
+	- can update inside the component
+	- when state changed, re-render section where change occurred
+	
+	
+	import { useState, useEffect } from "react";
+	
+	function App( {}) {
+
+		  const [emotion, setEmotion] = useState("happy")
+		  const [secondary, setSecondary] = useState("tired");
+
+		  return (
+		  
+		  <div className="App"> 
+		  
+			<h1> Current emotion is:  {emotion}  </h1>
+			<button onClick={() => setEmotion("Sad")}> Sad </button>
+			<button onClick={() => setEmotion("Excited")}> Excited </button>
+			
+			<h2> Current secondary emotion is {secondary}.</h2>
+			<button onClick={()=> setSecondary("Grateful")}>Grateful</button>
+			
+		  </div>
+		  
+		  );
+		}
