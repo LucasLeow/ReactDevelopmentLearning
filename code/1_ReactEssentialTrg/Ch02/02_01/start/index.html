@@ -14,19 +14,69 @@
   
 		<script type = "text/babel">
 		
-			let robot = "robot 1";
-			let cowboy = "cowboy 1";
-			let moon = "moon 1";
-	
-			ReactDOM.render(
-				<ul>
-					<li> {robot} </li>
-					<li> {cowboy} </li>
-					<li> {moon} </li>
-				</ul>,
-				document.getElementById("root")
-			);
-		
-		</script>
+      const dishes = [
+        "Black Bean Soup",
+        "Macaroni and Cheese",
+        "Salmon and Potatoes"
+      ]
+      
+      const dish_objs = dishes.map((dish, idx) => ({
+        id: idx,
+        name: dish
+      })
+      );
+        
+        function Header(props) {
+          return (
+            <header>
+              <h1> {props.name}'s Header </h1>
+            </header>
+          )
+        }
+        
+        function Main(props) {
+          return(
+          <section>
+            <img 
+              height = {300}
+              src="https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt="image of pancakes"
+              />
+            <p>
+              We serve the most {props.adjective} food around
+            </p>
+            
+            <ul>
+              {props.dishes.map((dish_obj) => (<li key={dish_obj.id}> {dish_obj.name} </li>))}
+            </ul>
+            
+          </section>
+          );
+        }
+        
+        function Footer(props) {
+          return (
+            <footer>
+              <p> Copyright {props.year} </p>
+            </footer>
+          );
+        }
+        
+        function App() { // to combine different components together
+          return (
+            <div>
+              <Header name="Lucas"/>
+              <Main adjective="delicious" dishes={dish_objs}/>
+              <Footer year={new Date().getFullYear()}/>
+            </div>
+          );
+        }
+        
+        ReactDOM.render(
+          <App/>,
+          document.getElementById("root")
+        );
+        
+      </script>
   </body>
 </html>

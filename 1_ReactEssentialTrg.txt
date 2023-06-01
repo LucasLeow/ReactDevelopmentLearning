@@ -147,7 +147,136 @@
 			);
 		
 		</script>
+		
+
+-- 3 React Components --
+
+-- 3-1 & 3-2 Creating React Components + Properties --
+	- Component: Building block
+		- A piece of UI for 1 part of the app
+		- A JS function that returns JSX
+		- fn name should have first letter capitalized
+		
+		Properties: (using FunctionName(props))
+		- using components to display dynamic data
+		- added as parameter to component Function (eg. Header(props))
+		- actual value for props added where the component is rendered
+		
+		
+				
+	- 3-3 Working with lists -
+		- shown in dishes & added in function Main(props)
+		- if dealing with list, convert to object first using .map() to have id tied to each li
+		- to prevent rendering problem
+		- if already objects, then just <li key={obj.id}> {obj.item} </li> 
+	
+		eg:
+		
+		<script type = "text/babel">
+		
+		const dishes = [
+			"Black Bean Soup",
+			"Macaroni and Cheese",
+			"Salmon and Potatoes"
+		]
+		
+		const dish_objs = dishes.map((dish, idx) => ({
+			id: idx,
+			name: dish
+		})
+		);
 			
+			function Header(props) {
+				return (
+					<header>
+						<h1> {props.name}'s Header </h1>
+					</header>
+				)
+			}
+			
+			function Main(props) {
+				return(
+				<section>
+					<img src="https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+					<p>
+						We serve the most {props.adjective} food around
+					</p>
+					
+					<ul>
+						{props.dishes.map((dish_obj) => (<li key={dish_obj.id}> {dish_obj.name} </li>))}
+					</ul>
+					
+				</section>
+				);
+			}
+			
+			function Footer(props) {
+				return (
+					<footer>
+						<p> Copyright {props.year} </p>
+					</footer>
+				);
+			}
+			
+			function App() { // to combine different components together
+				return (
+					<div>
+						<Header name="Lucas"/>
+						<Main adjective="delicious" dishes={dish_objs}/>
+						<Footer year={new Date().getFullYear()}/>
+					</div>
+				);
+			}
+			
+			ReactDOM.render(
+				<App/>,
+				document.getElementById("root")
+			);
+			
+		</script>
+		
+	- 3-4 Dealing with: "Each child in list should have unique "key" prop"
+	
+		- key = id to keep everything item within a list in sync
+		- if any changes to middle / start of the list, id will keep track of items
+		
+		
+		Solution 1: (Not recommended by React docs, still can cause rendering problem)
+		
+			.map((dish, idx) => (
+				<li key={idx}> {dish} </li>
+			))
+			
+		Solution 2: (create a new dish object from dishes array)
+			- dont need to convert to obj if provided collection is already object
+		
+			const dish_objs = dishes.map((dish, idx) => ({
+				id: idx,
+				name: dish
+			})
+			);
+			
+	- 3-5 Adding images -
+		just by adding <img src="imagelink" alt="imageDescription"/> in desired React Component
 			
 
+-- 3-6 React Fragment --
+	- When rendering react components, it must be wrapped within tags
+	
+	eg.
+		<div>
+			<Header/>
+			<Main/>
+			<Footer/>
+		</div>
 		
+	* This can cause clutter of <div>
+	
+	Solution: React Fragment
+		- will not add additional tags to DOM but still allow rendering of sibling components
+	
+		<React.Fragment>
+			<Header/>
+			<Main/>
+			<Footer/>
+		</React.Fragment>
