@@ -280,3 +280,179 @@
 			<Main/>
 			<Footer/>
 		</React.Fragment>
+
+-- 4 React State in Component Tree --
+
+-- 4-1 Generating Project with Create-React-App generator --
+	- previously was using index.html & CDN to connect to react library 
+	- better to use create-react-app to run react locally in browser
+	
+	1) Go to desired project directory
+	2) npx create-react-app projectName
+		eg: npx create-react-app react-app
+			- Installs:
+				- react
+				- reactDOM
+				- reactScripts (babel + compiling)
+		* if received files from someone else with package.json, just "npm i"
+	3) cd to react-app
+	4) npm start
+	
+-- 4-2 Touring create-react-app project --
+
+	inside package.json:
+		"dependencies"
+			- react: To create react components
+			- reactDOM: To add & render components to DOM
+			- react-scripts: Handle bundling
+			
+	in "src" directory:
+		- contain the main files
+			- index.js: Entry point for app (main js file)
+				- to render app to DOM
+				- <React.StrictMode> </React.StrictMode> (in reactDOM.render())
+					- tool for highlighting potential problems
+					- only run in dev, not in prod
+					
+			- app.js: File containing all the react components
+				- recap: react components are JS functions, with first letter caps
+				- within function, returns JSX syntax that looks like HTML
+				- last line consist of "export default App;"
+					- so that can import from index.js
+						- import App from './App';
+	
+	node_modules directory:
+		- where all the packages / dependencies are installed
+				
+	in "public" directory:
+		- index.html: Main html file where <div id="root"></div> exist
+		
+-- 4-3 Destructuring arrays & objects --
+
+	- important concept in JS : Destructuring
+		- helps deal with "state" in app
+		
+		Destructuring objects:
+			- { key_name } to immediately retrieve value based on key inside
+		
+		Destructuring arrays:
+			const [first, second, third] = ["Tokyo", "Singapore", "Taipei"];
+			- assigning variable name based on position in array
+			
+			first == "Tokyo"
+			second == "Singapore"
+			third == "Taipei"
+		
+		function App( {key_1} ) {
+		  return (
+			<div className="App"> 
+				<h1>
+				  Learning {key_1}
+				</h1>
+			</div>
+		  );
+		}
+		
+		ReactDOM.render(
+		  <React.StrictMode>
+			<App key_1="Destructuring"/>
+		  </React.StrictMode>,
+		  document.getElementById('root')
+		);
+		
+-- 4-4 & 4-5 useState & useEffect Hook --
+
+	Hooks:
+		- use state & other react features without writing a class
+
+	- useState fn: Modern way to handle states in React app
+	- const [initialState, setState] = useState("initialState");
+		- setState can be called to change value of state
+	- useState returns array of 2 items:
+		[currentState, function_to_modify_state]
+		
+	- State variable can be:
+		- String
+		- Number
+		- Boolean
+		- Object / Array
+	
+		- 4-4 useEffect Hook -
+			- typically used to manage side effects unrelated to component render
+			- console messages
+			- loading data
+			- using animations
+			
+			can utilize useEffect
+				- something that happens alongside the render
+				- takes in 2 arguments
+				
+				useEffect(fn_to_execute, dependency_array)
+					- dependency_array: when effect is called again
+						- if never pass in, useEffect will be called every time state changes
+						
+						- if pass in (fn, []): empty array: effect will not be called again
+
+						- (fn, [state_variable(s)])
+							- will track for any changes in the statevariable
+							- and execute the fn if changes detected
+							
+							[emotion, secondary] <- tracks the 2 state variables & execute fn if any changes is detected in the specified state variables.
+							
+							
+							
+					
+	eg:
+			
+		import { useState, useEffect } from "react";
+				
+		function App( {}) {
+
+		  const [emotion, setEmotion] = useState("happy")
+		  const [secondary, setSecondary] = useState("tired");
+
+		  useEffect(() => {
+			console.log(`It's ${emotion} right now`);
+		  }, [emotion]);
+
+		  useEffect(()=> {
+			console.log(`It's ${secondary} around here!`);
+		  })
+		  return (
+		  <div className="App"> 
+			<h1> Current emotion is:  {emotion}  </h1>
+			<button onClick={() => setEmotion("Sad")}> Sad </button>
+			<button onClick={() => setEmotion("Excited")}>Excited</button>
+			<h2> Current secondary emotion is {secondary}.</h2>
+			<button onClick={()=> setSecondary("Grateful")}>Grateful</button>
+		  </div>
+		  );
+		}	
+
+
+-- 4-7 useReducer Hook --
+	- takes in 2 arguments
+		(fn_to_execute, initial_state)
+	- use to execute a function whenever a change in state is detected
+		
+		
+	import {  useReducer  } from "react";
+		
+	function App( {}) {
+
+	  const [checked, setChecked] = useReducer(
+		(checked)=>!checked,
+		false
+		);
+		
+	  return (
+		<div className="App">
+		  <input 
+			type="checkbox" 
+			value={checked} 
+			onChange={setChecked}
+		  />
+		  <label>{checked? "checked":"not checked"}</label>
+		</div>
+	  )
+	}	
