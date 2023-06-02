@@ -79,6 +79,9 @@
 
 
 -- 2 Keyboard Focus --
+	- Tab key: Moving between elements
+	- Enter key: Selects element
+	- Arrow Keys: Controlled navigation between elements
 
 -- 2-1 Managing Keyboard Focus in React components --
 
@@ -145,3 +148,55 @@
 		.skip_link:focus {
 			transform: translateY(0%);
 		}
+		
+-- 3 Mouse and Pointer Events --
+
+-- 3-1 Accessibility issues with Mouse & Pointer events --
+	- keyboard users cannot use app if app is mouse-only
+	
+	- use blur & focus events to help resolve any issues
+	
+-- 3-2 Making app accessible by keyboards --
+	- typically involving dropdown menu interactivity
+		- tabbing does not close drop-down menu
+		- next tab menu does not open
+		
+	Solution:
+		//onFocus: When user focus on element
+		// onBlur: When user leaves the element
+		// .onFocusHandler: Function to toggle dropdown
+		<div onFocus={this.onFocusHandler} onBlur={this.onBlurHandler}
+		
+		constructor() {
+			onBlurHandler = () => {
+				this.timeOutId = setTimeout(() => {
+					this.setState({
+						isOpen: false
+					})
+				}, 0000)
+			}
+			
+			onFocusHandler() = () => {
+				clearTimeout(this.timeOutId);
+			}
+		}
+		
+
+-- 4 Testing --
+	- Chrome Devtools:
+		- A set of web dev tools built directly in google chrome
+		- help edit pages on the fly
+		- diagnose problems quickly
+		
+	- Lighthouse tool:
+		- Open source, automated tool
+		- For improving quality of webpages
+			- Performance
+			- Accessibility
+			- Progressive Web App
+			- SEO
+			
+		- Accessible via:
+			- Chrome devtools
+			- Command line
+			- Node module
