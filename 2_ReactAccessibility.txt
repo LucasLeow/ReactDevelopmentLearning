@@ -1,0 +1,78 @@
+-- Introduction --
+
+	- Creating accessible website for people with disabilities
+	
+-- 1 Accessibility on the Web --
+
+-- 1-1 Need for Accessibility --
+	- semantic HTML & react tags
+	- managing keyboard focus
+	- mouse & pointer events
+	- testing
+	
+-- 1-2 Semantic HTML: Foundation of web accessibility --
+	- Semantic element:
+		- clearly describes meaning to both browser & developer
+		- Semantic = with meaning
+		- define different parts of a webpage, making it easier to read
+		
+		
+	Non-Semantic:
+		- <div>
+		- <span>
+		
+	Semantic:
+		- <form>
+		- <table>
+		- <aside>
+		
+	Screen Reader:
+		- Use text-to-speech engine to translate on-screen info into speech
+			( For visual disability )
+		- Gets info from DOM (HTML Structure) of page
+			- No styles / JS will be read
+			
+	HTML5 introduced new Semantic tags:
+		- <nav>
+		- <article>
+		- <main>
+		
+			- Just use for sectioning of page
+			
+	
+-- 1-3 Semantic React Tags --
+	- semantic tags used in React
+	- bad practice: use many nested <div> tags to wrap
+		- adding wrapper divs to React Virtual DOM -> rendered in main DOM as non-semantic tags
+		
+		- <React.Fragment>
+			- allow grouping of components without adding extra tags in DOM
+		- <Fragment>
+		- <>
+		
+	Bad eg.
+		const Home = () => {
+			return (
+				<div id = "home_container">
+					<Banner />
+					<Products />
+					<Promo />
+				</div>
+			)
+		}
+		
+	Good eg.
+	
+		const Home = () => {
+			return (
+				<React.Fragment>
+					<Banner />
+					<Products />
+					<Promo />
+				</React.Fragment>
+			)
+		}
+		
+	if import { Fragment } from "react"
+	
+	then only need <Fragment> </Fragment> instead of <React.Fragment>
