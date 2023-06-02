@@ -832,3 +832,110 @@
 			} />
 		  );
 		  }
+		  
+-- 7 React Router --
+	- mechanism for moving component to component
+	- connecting different components together
+		- similar to linking of pages together
+			- eg. Moving from home page (home component) -> About page (about component)
+	
+	- npm install react-router-dom
+		- take note of vulnerabilities
+		- works for web app, if for ReactNative, have its own package to deal with routes
+		
+	Inside App.js (Where components reside)
+		- remember to export components
+	
+	eg.
+	
+	export function About() {
+	  return (
+		<div>
+		  <h1>About Us</h1>
+		</div>
+	  )
+	}
+	
+	export function App() {
+	  return <h1>Testing</h1>
+	}
+	
+	Inside index.js (entry point)
+	
+		import { BrowserRouter, Routes, Route } from "react-router-dom";
+		
+		ReactDOM.render(
+			<BrowserRouter>
+			  <Routes>
+				<Route path="/" element={<App />} />
+				<Route path="/about" element={<About />} />
+			  </Routes>
+			</BrowserRouter>,
+			document.getElementById('root')
+		);
+		
+-- 7-3 Creating in-page links to pages --
+
+
+	Inside App.js:
+	
+		import { Link } from "react-router-dom";
+		
+		export function App() {
+		  return (
+			<div>
+			  <nav>
+				<Link to="/about">About</Link>
+				<Link to="/contact">Contact</Link>
+			  </nav>
+			  <h1>Testing</h1>
+			</div>
+		  )
+		}
+		
+-- 7-4 Nested Routes to display content --
+
+	eg. Want to display <History> component content in <About> component
+	
+	inside App.js:
+	
+		import { Link, Outlet } from "react-router-dom";
+	
+		export function About() {
+		  return (
+			<div>
+			  <h1>About Us</h1>
+			  <Outlet /> // child content here
+			</div>
+			<span>
+				<Outlet /> // child content here
+			</span>
+		  )
+		}
+	
+		export function History() {
+			return (
+				<div>
+					<h1> Our History </h1>
+				</div>
+			);
+		}
+	
+	inside index.js:
+	
+		import {App, About, History}  from './App';
+		import { BrowserRouter, Routes, Route } from "react-router-dom";
+		
+		ReactDOM.render(
+			<BrowserRouter>
+				<Routes>
+					<Route path="/" element={<App />}/>
+					<Route path="/about" element={<About />}>
+						<Route path="history" element={<History />}/> // access with /about/history
+					</Route>	
+				</Routes>
+			</BrowserRouter>
+		)
+
+	- After linking child path with parent path, content of child can be accessed by:
+		- specifying <Outlet /> in parent component
