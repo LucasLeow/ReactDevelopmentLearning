@@ -76,3 +76,72 @@
 	if import { Fragment } from "react"
 	
 	then only need <Fragment> </Fragment> instead of <React.Fragment>
+
+
+-- 2 Keyboard Focus --
+
+-- 2-1 Managing Keyboard Focus in React components --
+
+	- navigating site without mouse
+	- navigate using keyboard only
+		- focus states is how they know where they are on the page
+	- Screen reader does not call-out when a new component renders
+	
+		Solution:
+			1) Create a ref for the element
+			2) Assign the created ref to the element
+			3) Set focus to trigger with a lifecycle  method
+			
+		eg.
+		
+		constructor() {
+			this.successMessage = React.createRef()
+		}
+		
+		//Lifecycle method
+		componentDidUpdate = () => {
+			this.successMessage.current.focus() // when component updates, element will be focused on
+		}
+	
+		<img src="{logo}" alt="logo" className="footer_logo"/>
+		
+		// focus on <p> attributes
+		// tabIndex is to ensure element can be tabbed into
+		{this.state.subscribed ? <p ref={this.successMessage} tabIndex="0">Thank you! You're subscribed! </p> : 
+		<form>
+			...
+		</form>
+		}
+
+-- 2-2 Skip link options --
+	- When user uses tab to skip through content, can be tedious if many links
+	
+		Possible implementation: (using CSS to implement invisible link)
+		
+			- Provide visible links at top of the page (may be distracting)
+			- Provide visible links elsewhere on page (may not be easily seen)
+			- Make link invisible (only for keyboard focus users)
+			- Make link invisible until keyboard focus mode (best workaround)
+			
+		eg.
+		// When link clicked, will skip to section with id = products
+		<a href="#products"> Skip Navigation </a>
+		
+		Invisible link implementation:
+		
+		<a href="#learn_more" className="skip_link">Skip Navigation</a>
+		
+		CSS:
+		
+		.skip_link {
+			background: orange;
+			left: 50%;
+			padding: 8px;
+			position: absolute;
+			transform: translateY(-170%);
+			transition: transform 0.3s;
+		}
+		
+		.skip_link:focus {
+			transform: translateY(0%);
+		}
