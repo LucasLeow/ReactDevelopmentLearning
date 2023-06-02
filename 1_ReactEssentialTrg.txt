@@ -939,3 +939,64 @@
 
 	- After linking child path with parent path, content of child can be accessed by:
 		- specifying <Outlet /> in parent component
+		
+-- 8 React Testing & Deployment --
+	-- npm test (Included in scripts in package.json during package installation)
+	
+	
+-- 8-1 Testing small functions with Jest --
+	- Utilizing Jest Matcher functions
+		- see documentation guide
+
+	Have the 2 files:
+		1) function.js
+		2) function.test.js
+		3) npm test (in terminal)
+		
+	- create-react-app already added Jest package
+	- only need to have .test.js to begin testing
+	
+	inside function.js:
+	
+		export function timesTwo(n) {
+			return n*2;
+		}
+		
+	inside function.test.js:
+	
+	import { timesTwo } from "./function";
+		test("Multiplies by two", ()=>{
+		expect(timesTwo(4)).toBe(8);
+	})
+	
+-- 8-3 React Testing Library (testing functions) --
+
+	Create:
+		1) Star.js
+		2) Star.test.js
+		
+		inside Star.js:
+		
+		export function Star() {
+			return <h1>Cool Star </h1>
+		}
+		
+		inside Star.test.js:
+		
+		import { render } from "@testing-library/react";
+		import { Star } from "./Star";
+		
+		test("renders a h1", () => {
+			const { getByText } = render(<Star />); // Looks for Star component
+			const h1 = getByText(/Cool Star/);
+			expect(h1).toHaveTextContent("Cool Star");
+		});
+
+
+	
+-- Deploying React Project --
+	1) Go to project folder
+	2) npm run build
+		- creates a folder called build
+	3) Go to netlify (web to deploy app temporarily)
+		- drag drop build folder and deploy
