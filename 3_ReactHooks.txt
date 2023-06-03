@@ -1,0 +1,54 @@
+Intro
+
+	- What are hooks?
+		- Hooks are JS functions
+			- handle state
+			- fetch data
+			- interact with browser API
+			- functions shared across files / projects (reusability)
+			
+-- 1 Intro to React Hooks --
+
+-- 1-1 React Hooks History --
+
+	2013 - 2017: 
+		- var historicalComponent = React.createClass(
+		{
+			render: function() {
+				return (
+					<div>
+						<h1> Previous method of creating components </h1>
+					</div>
+				)
+			}
+		}
+		);
+		
+		
+	After 2017:
+	
+	function NewComponent() {
+		return (
+			<div>
+				<h1> New Component </h1>
+			</div>
+		)
+	}
+	
+	PROBLEM:
+	
+		- When state variables added, need to refactor function components into class
+			- time consuming
+	SOLUTION:
+	
+		- React hooks (JS Functions)
+			- add state to function components
+			- abstract login into separate functions
+		
+	CONVENTION:
+		- React hooks starts with keyword "use"
+			- useState
+			- useReducer
+			- useQuery
+			- useContext
+			- use<Name>
