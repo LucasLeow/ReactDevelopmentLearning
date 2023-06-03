@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return ( 
-      <div className="App">
-        Hello
-      </div>
+function App(props) {
+  return(
+  <div>
+    <h1> {props.name} has a height of {props.height} </h1>
+  </div>
   )
 }
 

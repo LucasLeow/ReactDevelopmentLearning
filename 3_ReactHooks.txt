@@ -52,3 +52,115 @@ Intro
 			- useQuery
 			- useContext
 			- use<Name>
+			
+-- 2 useState Hook --
+
+-- 2-1 Reviewing array, object destructuring --
+
+
+	PROPS concept:
+	
+			- can pass (props) argument to any components
+				- props is essentially an object
+					- key: property
+					- value: value of property
+				
+				WHERE TO SPECIFY PROPERTY?
+					- property is specified in index.js, or wherever the component is rendered
+					
+					eg.
+					inside index.js:
+					
+					ReactDom.render(
+						<React.StrictMode>
+							<App name="Lucas" height=1.8/>
+						</React.StrictMode>
+					)
+					
+					inside App.js:
+					
+					function App(props) {
+						return(
+						<div>
+							<h1> {props.name} has a height of {props.height} </h1>
+						</div>
+						)
+					}
+			
+			
+	Destructuring objects:
+	
+			function App( {name, height} ) {
+				return (
+					<div className="App">
+						{name} is {height}m tall.
+					</div>
+				)
+			}
+	
+	Destructuing array:
+	
+			const [p1, p2, p3] = ["Person1", "Person2", "Person3"];
+			console.log(p1, p2, p3);
+			
+			const [,,p3] = ["Person1", "Person2", "Person3"];
+			
+			
+-- 2-2 Incorporating useState hook --
+	- used to add state to a component
+	- declared within component function
+	
+		import { useState } from "react";
+		
+		function App() {
+			const [status, setStatus ] = useState("Undelivered"); // [initialState, function]
+			// setStatus used to change state
+			// just call : setStatus(<newState>)
+			
+			return (
+				<div>
+					<h1> The Package is: {status} </h1>
+					<button onClick={()=>setStatus("Delivered")}/> Deliver </button>
+				</div>
+			);
+		}
+		
+-- 2-3 Checkbox with useState --
+	- useState can be used with HTML inputs to track state of input component
+	
+	
+	function Checkbox() {
+		const [checked, setChecked] = useState(false);
+		return (
+			<div>
+				<input type="checkbox" value={checked} onChange={()=>setChecked(checked=>!checked)}/>
+			</div>
+		)
+	}
+	
+-- 2-4 State in Component Trees --
+	- Typically, app may have multiple components
+	- state in 1 component can affect other components
+	
+	
+		eg.
+		
+		import React, { useState } from "react";
+		import { FaStar } from "react-icons/fa";
+		
+		const createArray = (numStars) => [...Array(numStars)] // [undefined, undefined ...] 
+		
+		function Star ({ selected=false }) {
+			return <FaStar color={selected?"red":"grey"} onClick={onSelect}/>;
+		}
+		
+		function StarRating({ totalStars }) {
+			const [selectedStars, setSelectedStars] = useState(0); // initially 0 selected stars
+			return createArray(totalStars).map((star, idx) => {
+				<Star key={idx} onSelect={()=>setSelectedStars(idx+1)} selected={selectedStars>i}/>
+			}) // [Star, Star ...]
+		}
+		
+		function App() {
+			return <StarRating totalStars={5}/>
+		}
