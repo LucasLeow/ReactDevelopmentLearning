@@ -149,18 +149,94 @@ Intro
 		import { FaStar } from "react-icons/fa";
 		
 		const createArray = (numStars) => [...Array(numStars)] // [undefined, undefined ...] 
-		
-		function Star ({ selected=false }) {
-			return <FaStar color={selected?"red":"grey"} onClick={onSelect}/>;
+
+    
+		function Star ({ selected=false, onSelect }) {
+			return <FaStar color={selected?"red":"grey"} onClick={onSelect}/>; // onClick event, perform onSelect function declared in <Star /> rendering in StarRating Component
+			// onClick, will call the onSelect function : setSelectedStars
 		}
 		
 		function StarRating({ totalStars }) {
 			const [selectedStars, setSelectedStars] = useState(0); // initially 0 selected stars
-			return createArray(totalStars).map((star, idx) => {
-				<Star key={idx} onSelect={()=>setSelectedStars(idx+1)} selected={selectedStars>i}/>
-			}) // [Star, Star ...]
-		}
-		
-		function App() {
+			return (
+        <>
+          {createArray(totalStars).map((star, idx) => (
+            <Star key={idx} selected={selectedStars>idx} onSelect={()=>setSelectedStars(idx+1)}/>
+          )) }
+          <p>
+            {selectedStars} of {totalStars}
+         </p>
+        </>
+      )
+    }
+
+    function App() {
 			return <StarRating totalStars={5}/>
 		}
+
+	ReactDOM.render(
+	  <React.StrictMode>
+		<App />
+	  </React.StrictMode>,
+	  document.getElementById("root")
+	)
+
+-- 3 useEffect Hook --
+	- perform "side effects" in components
+		- console logging to terminal
+		- interact with DOM API (history / window)
+		- useEffect(fn_to_execute, []) // [] is the dependency array
+		
+			- useEffect(fn, []) // only fire once during first render
+			- useEffect(fn, [<stateVariableName>]) // fires when specified state changes
+				- can be tracking multiple states
+					eg: useEffect(fn, [name, height, location]);
+				- running certain code only when certain state changes
+	
+	usage:
+	
+	import { useState, useEffect } from "react"
+	
+	function App() {
+		const [name, setName] = useState("Lucas");
+		
+		useEffect(()=>{
+			document.title=`Celebrate ${name}`
+		});
+		
+		return(
+			<section>
+				<p> Congratulations {name}! </p>
+				<button onClick={()=>setName("Tommy")}> Change Winner </button>
+			</section>
+		)
+
+	}
+
+-- 3-3 Fetching data with useEffect
+	- another common use case for useEffect
+	- typically want
+		useEffect(URL, []) // fire only once, else will keep querying for API info
+		
+	function App() {
+		const [data, setData] = useState([]);
+
+		useEffect(()=> {
+		  fetch("https://api.github.com/users")
+		  .then(res => res.json())
+		  .then(res => setData(res))
+		}, [])
+
+		if (data) {
+		  return (
+			<ul>
+				{data.map(user=>(
+				  <li key={user.id}>{user.login}</li>
+				))}
+			</ul>
+		  )
+		}
+		return (
+		  <p>No Users</p>
+		)
+	}

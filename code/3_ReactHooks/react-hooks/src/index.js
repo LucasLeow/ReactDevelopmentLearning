@@ -1,38 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { FaStar} from "react-icons/fa";
-
-const createArray = (numStars) => [...Array(numStars)];
-
-function Star( {selected = false, onSelect}) {
-  return <FaStar color={selected?"red":"grey"} onClick={onSelect}/>
-}
-
-function StarRating({totalStars}) {
-  const [selectedStars, setSelectedStars] = useState(0);
-  return (
-    <>
-       {
-createArray(totalStars).map((n, i) => (
-  <Star key={i} selected={selectedStars > i} onSelect={()=>setSelectedStars(i+1)}/>
-))
-       } 
-
-    <p>
-      {selectedStars} of {totalStars}
-    </p>
-    </>
-
-
-  )
-}
+  
 
 function App() {
-  return <StarRating totalStars={5}/>;
-}
+    const [data, setData] = useState([]);
+
+    useEffect(()=> {
+      fetch("https://api.github.com/users")
+      .then(res => res.json())
+      .then(res => setData(res))
+    }, [])
+
+    if (data) {
+      return (
+        <ul>
+            {data.map(user=>(
+              <li key={user.id}>{user.login}</li>
+            ))}
+        </ul>
+      )
+    }
+    return (
+      <p>No Users</p>
+    )
+		}
 
 ReactDOM.render(
   <React.StrictMode>

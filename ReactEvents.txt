@@ -1,0 +1,13 @@
+- Almost similar concept to JS HTML events
+- React events utilize camelCase convention
+- functions passed in JSX template format
+
+eg.
+
+	// function FirstButton({ activateLasers }) {
+		return (
+			<button onClick={activateLasers} </button>
+		);
+	}
+	
+	
