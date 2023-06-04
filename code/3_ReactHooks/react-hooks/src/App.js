@@ -1,11 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
 
-function App(props) {
+import React, { useContext } from "react";
+import { TreesContext } from "./";
+
+function App() {
+  const received = useContext(TreesContext);
+  console.log(received);
   return(
-  <div>
-    <h1> {props.name} has a height of {props.height} </h1>
-  </div>
+<ul>
+  {received.map(obj => (
+      <li key={obj.id}>{obj.type}</li>
+  )
+  )}
+</ul>
   )
 }
 

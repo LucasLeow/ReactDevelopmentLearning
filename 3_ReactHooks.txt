@@ -390,3 +390,176 @@ Intro
 			</form>
 		  )
 	}
+	
+-- 5 Creating Custom Hooks --
+
+	- use case is where repetitive task is done
+	- allowed to use hooks within hooks
+		eg. using useState inside custom hook
+		
+
+			
+	-- 5-1 Form Logic using Custom Hooks --
+	
+			1) create a new JS file with "use" at the start
+			- eg. useInput.js
+			
+			inside useInput.js:
+			
+					import { useState } from "react";
+					
+					export function useInput(initValue) {
+						const [value, setValue] = useState(initValue);
+						
+					return (
+						[
+							{
+								value,
+								onChange: (e) => setValue(e.target.value)
+							},
+							()=>setValue(initValue)
+						]
+					)
+					
+				}
+			
+			inside index.js
+			
+			import { useInput } from "./useInput";
+			
+			function App() {
+				const [titleProps, resetTitle] = useInput("");
+				const [colorProps, resetColor] = useInput("");
+				
+				const submit = (e) => {
+					e.preventDefault();
+					alert(`${titleProps.value} & ${colorProps.value}`);
+					resetTitle();
+					resetColor();
+				}
+				return (
+					<form onSubmit={submit}>
+						<input type="text" {...titleProps}/>
+						<input type="color" {...colorProps}/>
+						<button> ADD </button>
+					</form>
+				)
+			}
+			
+-- 5-2 Placing data in context --
+	- All child components will know value in context
+	- React context using React hooks
+	
+	
+		eg.
+		import { createContext } from "react";
+		
+		export const TreesContext = createContext();
+		
+			- Container to store data which can be consumed by any components part of same tree
+			- any component nested within container can use data
+			
+
+		const trees = [
+			{id:"1", type:"Maple"},
+			{id:"2", type:"Oak"},
+			{id:"3", type:"Willow"},
+			{id:"4", type:"Yew"},
+		];
+		
+		Goal: Want to make trees accessible by all components
+		
+		
+		ReactDOM.render(
+			<TreesContext.Provider value={trees}> // data passed is trees variable
+				<App />	// Any component nested within can access data passed
+			</TreesContext.Provider>
+		)
+		
+		
+		in App.js:
+		import { TreesContext } from "./";
+		import React, { useContext } from "react";
+		
+		function App() {
+			const received = useContext(TreesContext); // array of objects received
+			return (
+				<ul>
+					{received.map(obj => (
+						<li key={obj.id}> {obj.type} </li>
+					)
+					)}
+				</ul>
+			)
+		}
+		
+		export default App;
+
+-- 5-3 Making useContext more accessible --
+
+	- inside index.js:
+	
+			import React, { createContext, useContext } from "react";
+			
+			const TreesContext = createContext();
+			export const useTrees = () => useContext(TreesContext);
+	
+	- inside App.js;
+		
+			import { useTrees } from "./";
+			
+			
+			const { received } = useTrees();
+	
+-- 5-4 Fetching data with custom hook --
+
+	3 states for fetching data
+		1) Loading data
+		2) Received data
+		3) Error data
+		
+		
+		1) Create useFetch.js
+		
+				import { useState, useEffect } from "react";
+
+				export function useFetch(uri) {
+					const [data, setData] = useState();
+					const [loading, setLoading] = useState(true);
+					const [error, setError] = useState();
+
+					useEffect(() => {
+						setLoading(true);
+
+						if (!uri) return;
+						fetch(uri)
+						.then(data=> data.json())
+						.then(data=>setData(data))
+						.then(()=>setLoading(false))
+						.catch(setError)
+					}, [uri]); // call useEffect only when uri changes 
+
+					return {loading, data, error};
+				}
+	
+	import {useFetch} from "./useFetch";
+
+	function App({login}){
+	const {loading, data, error} = useFetch(`https://api.github.com/users/${login}`);
+
+	if (loading) {return <h1> Loading Data </h1>};
+	if (error) {return <pre>{JSON.stringify(error, null, 2)}</pre>}
+
+	return (
+	  <div>
+		<img src={data.avatar_url} alt={data.login}/>
+		<h1>{data.name}</h1>
+	  </div>
+	)
+
+	}
+	ReactDOM.render(
+		<App login="LucasLeow"/>,
+	  document.getElementById("root")
+	)
+			

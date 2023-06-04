@@ -1,33 +1,26 @@
-import React, { useState  } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
-import reportWebVitals from './reportWebVitals';
-  
-function App() {
-  const [sound, setSound] = useState("");
-  const [color, setColor] = useState("#000000")
+import reportWebVitals from './reportWebVitals';  
+import {useFetch} from "./useFetch";
 
-  const submit = (e) => {
-    e.preventDefault();
-    alert(`${sound} & ${color}`)
-    setSound("");
-    setColor("#000000")
-  }
+function App({login}){
+const {loading, data, error} = useFetch(`https://api.github.com/users/${login}`);
 
-  return (
-    <form onSubmit={submit}>
-      <input value={sound} type="text" onChange={(e)=>setSound(e.target.value)}/>
-      <input value={color} type="color" onChange={(e)=>setColor(e.target.value)}/>
-      <button>ADD</button>
-    </form>
-  )
+if (loading) {return <h1> Loading Data </h1>};
+if (error) {return <pre>{JSON.stringify(error, null, 2)}</pre>}
+
+return (
+  <div>
+    <img src={data.avatar_url} alt={data.login}/>
+    <h1>{data.name}</h1>
+  </div>
+)
+
 }
-
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <App login="LucasLeow"/>,
   document.getElementById("root")
 )
 
