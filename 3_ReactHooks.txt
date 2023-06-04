@@ -134,6 +134,7 @@ Intro
 		return (
 			<div>
 				<input type="checkbox" value={checked} onChange={()=>setChecked(checked=>!checked)}/>
+				{checked?"checked":"unchecked"}
 			</div>
 		)
 	}
@@ -239,4 +240,153 @@ Intro
 		return (
 		  <p>No Users</p>
 		)
+	}
+	
+-- 4 Additional Hooks --
+
+-- 4-1 useReducer Hook --
+	- another way to handle states
+	- useReducer(set_fn, <initial_state>)
+		- function that will execute whenever setState fn called
+			- first argument of set_fn is the current state
+			- second argument will be argument passed in setState fn
+				- only can handle 1 argument
+
+	
+	eg.
+	
+		function App() {
+			const [number, setNumber] = useReducer((num, new_num) => num + new_num, 0);
+				- num refers to current state (i.e number)
+			
+			return (
+				<h1 onClick={setNumber(1)}> {number} </h1>
+			)
+		}
+		
+		
+-- 4-2 useReducer replacing useState --
+	
+	
+	useState method:
+	
+	function Checkbox() {
+		  const [checked, setChecked] = useState(false);
+		  return (
+			<div>
+			  <input type="checkbox" value={checked} onChange={()=>setChecked(checked=>!checked)}/>
+			  {checked?"checked":"unchecked"}
+			</div>
+		  )
+	}
+	
+	useReducer method:
+		- setState function abstracted to be declared within useReducer() fn
+		- previously, function login specified within setState function
+	
+	function Checkbox() {
+	
+		  const [checked, setChecked] = useReducer((checked)=>!checked, false);
+		  
+		  return (
+			<div>
+			  <input type="checkbox" value={checked} onChange={()=>setChecked()}/>
+			  {checked?"checked":"unchecked"}
+			</div>
+		  )
+	}
+	
+
+-- 4-3 Dispatching actions using useReducer --
+
+	reducer function:
+		- takes in a state and an action
+		- returns a new state
+		
+	
+	function App() {
+		const initialState = { message: "hi"};
+		
+		function reducer(state, action) {
+			switch(action.type) {
+				case "yell": return {message: `HEY! I just said ${state.message}`}
+				case "whisper": return {message: `excuse me, I just said ${state.message}`}
+			}
+		}
+		
+		const [state, dispatch] = useReducer(reducer, initialState);
+		
+		return (
+			<>
+				<p> Message: {state.message} </p>
+				<button onClick={()=>dispatch({type:"yell"})}> YELL </button>
+				<button onClick={()=>dispatch({type:"whisper"})}> whisper </button>
+				
+			</>
+		)
+	}
+	
+-- 4-4 useRef for forms --
+	- to obtain info input to form
+		1) Create a ref_variable used to track desired input value
+			eg: const sound = useRef();
+			
+		2) Attach the variable name as attribute to input tag
+			eg: <input ref={sound} type="text"/>
+			
+		3) Create a function to access values
+			eg:
+			
+			const submit = (e) => {
+				e.preventDefault();
+				const soundVal = sound.current.value;'
+				sound.current.value = ""; // resets the value
+			}
+	
+	eg.
+	
+			function App() {
+			  const sound = useRef();
+			  const color = useRef();
+
+			  const submit = (e) => {
+				e.preventDefault();
+				const soundValue=sound.current.value;
+				const colorValue=color.current.value;
+				alert(`${soundValue} & ${colorValue}`)
+			  }
+
+			  return (
+				<form onSubmit={submit}>
+				  <input ref={sound} type="text"/>
+				  <input ref={color} type="color"/>
+				  <button>ADD</button>
+				</form>
+			  )
+			}
+	
+	
+-- Controlled Component to handle form inputs --
+
+	- handle form inputs using state variables instead of useRef
+	
+	
+	function App() {
+		  const [sound, setSound] = useState("");
+		  const [color, setColor] = useState("#000000")
+
+		  const submit = (e) => {
+			e.preventDefault();
+			alert(`${sound} & ${color}`)
+			setSound("");
+			setColor("#000000")
+		  }
+
+		  return (
+			<form onSubmit={submit}>
+			  <input value={sound} type="text" onChange={(e)=>setSound(e.target.value)}/>
+			  <input value={color} type="color" onChange={(e)=>setColor(e.target.value)}/>
+			  <button>ADD</button>
+			</form>
+		  )
 	}

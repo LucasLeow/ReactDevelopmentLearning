@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState  } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
   
-
 function App() {
-    const [data, setData] = useState([]);
+  const [sound, setSound] = useState("");
+  const [color, setColor] = useState("#000000")
 
-    useEffect(()=> {
-      fetch("https://api.github.com/users")
-      .then(res => res.json())
-      .then(res => setData(res))
-    }, [])
+  const submit = (e) => {
+    e.preventDefault();
+    alert(`${sound} & ${color}`)
+    setSound("");
+    setColor("#000000")
+  }
 
-    if (data) {
-      return (
-        <ul>
-            {data.map(user=>(
-              <li key={user.id}>{user.login}</li>
-            ))}
-        </ul>
-      )
-    }
-    return (
-      <p>No Users</p>
-    )
-		}
+  return (
+    <form onSubmit={submit}>
+      <input value={sound} type="text" onChange={(e)=>setSound(e.target.value)}/>
+      <input value={color} type="color" onChange={(e)=>setColor(e.target.value)}/>
+      <button>ADD</button>
+    </form>
+  )
+}
 
 ReactDOM.render(
   <React.StrictMode>
